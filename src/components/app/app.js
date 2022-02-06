@@ -15,20 +15,25 @@ export default class App extends Component {
 
   createBoardInfo() {
     this.maxId += 1;
-    return { key: this.maxId, id: this.maxId };
+    return { key: this.maxId, id: this.maxId++ };
   }
 
   onDelete = (id) => {
     this.setState( ({ boards }) => {
-      const deleteIndex = boards.findIndex((el) => el.id === id);
+      // const deleteIndex = boards.findIndex((el) => el.id === id);
+      const deleteIndex = this.findIndex(boards, id);
       return { boards: [...boards.slice(0, deleteIndex), ...boards.slice(deleteIndex + 1)]};
     });
   };
 
   onAdd = () => {
     this.setState( ({boards}) => {
-      return { boards: [...boards, this.createBoardInfo()]}
+      return { boards: [...boards, this.createBoardInfo()] }
     } )
+  }
+
+  findIndex = (array, id) => {
+    return array.findIndex((el) => el.id === id);
   }
   
   render() {

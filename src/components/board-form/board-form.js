@@ -179,7 +179,7 @@ function createFormButtons ({numberOfBoards, onDelete, onAdd, id}) {
     <button 
       className='btn-calculate' 
       type='button'
-      >посчитать
+      >посчитать по-братски
     </button>
   );
 
@@ -194,8 +194,8 @@ function createFormButtons ({numberOfBoards, onDelete, onAdd, id}) {
   const addFormBtn = (
     <button 
       className={buttonSize} 
-      type='reset'
-      onClick={() => onAdd()}
+      type='button'
+      onClick={() => onAdd(id)}
       >добавить
   </button>
   )
