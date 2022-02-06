@@ -1,0 +1,62 @@
+.board-form {
+  padding: 20px;
+  border: 1px solid rgb(180, 180, 180);
+  border-radius: 20px;
+  width: max-content;
+  
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+
+}
+
+.board-form__section {
+  margin-bottom: 20px;
+  /* border: 1px solid red; */
+}
+
+
+.board-form__group label {
+  margin-bottom: 60px;
+  color: #222222;
+}
+
+
+.board-form__group input {
+  display: flex;
+  flex-direction: column;
+
+  border: none;
+  border-bottom: 1px solid #999;
+
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+
+  -moz-appearance:textfield;
+}
+
+.board-form__group input::placeholder {
+  color: #999;
+}
+.board-form__group input:focus {
+  outline: none;
+}
+
+
+.board-form__buttons {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+
+.big {
+  width: 49%;
+}
+.small {
+  width: 33%;
+}
+
+.btn-calculate {
+  width: 100%;
+}
