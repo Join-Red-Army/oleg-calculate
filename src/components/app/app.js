@@ -3,7 +3,7 @@ import './app.css';
 import BoardsList from '../boards-list'
 
 export default class App extends Component {
-  maxId = 0;
+  maxId = 100;
 
   state = {
     boards: [ 
@@ -30,7 +30,7 @@ export default class App extends Component {
     this.setState( ({boards}) => {
       const i = this.findIndex(boards, id);
       const newItem = this.createBoardInfo();
-      const newArr = [...boards.slice(0, i + 1), newItem, ...boards.slice(i - 1)]
+      const newArr = [...boards.slice(0, i + 1), newItem, ...boards.slice(i + 1)]
       return { boards: newArr }
     } )
   }

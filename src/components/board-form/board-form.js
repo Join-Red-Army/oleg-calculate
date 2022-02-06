@@ -64,15 +64,15 @@ const createWoodTypesInput = (id) => {
   return (
     <div className='board-form__group'>
       
-      <label htmlFor={`wood-type-${id}`}>
+      {/* <label htmlFor={`wood-type-${id}`}>
         Порода дерева
-      </label>
+      </label> */}
       
       <input
         type='text'
         id={`wood-type-${id}`}
         list='wood-list' 
-        placeholder='не обязательное поле'
+        placeholder='порода дерева'
       />
         
       <datalist 
