@@ -1,12 +1,15 @@
 .board-form {
+  width: min-content;
+  margin: 15px;
   padding: 20px;
   border: 1px solid rgb(180, 180, 180);
   border-radius: 20px;
-  width: min-content;
-  
+
   font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   font-weight: 300;
+
+  /* box-shadow: ; */
 
 }
 

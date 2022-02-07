@@ -7,7 +7,6 @@ export default class App extends Component {
 
   state = {
     boards: [ 
-      this.createBoardInfo(), 
       this.createBoardInfo()
     ],
   }
