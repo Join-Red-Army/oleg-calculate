@@ -15,33 +15,9 @@ export default class BoardForm extends Component {
   };
 
   onPriceChange = (e) => {
-    const price = e.target.value;
-    this.setState({price});
+    const priceForCubicMeter = e.target.value;
+    this.setState({priceForCubicMeter});
   }
-
-  checkDimensionsCompletion = () => {
-    const { thickness, width, length } = this.state;
-    return !!(thickness && width && length);
-  }
-
-
-  transformToCubicMeters = () => {
-    const { thickness, width, length, units, } = this.state;
-    let unitsDivider = 1;
-    
-    if (units === 'mm') unitsDivider = 1000000000;
-    else if (units === 'cm') unitsDivider = 100;
-    
-    const volumeInMeters = ([thickness, width, length]
-      .reduce((acc, current) => current * acc )) / unitsDivider;
-    return volumeInMeters;
-  };
-
-  getTotalPrice = () => {
-    const { priceForCubicMeter, totalVolume } = this.state;
-    return priceForCubicMeter * totalVolume;
-  }
-
 
   onCalculate = () => {
     const { priceForCubicMeter } = this.state;
@@ -55,76 +31,95 @@ export default class BoardForm extends Component {
     this.setState({totalVolume, totalPrice})
   }
 
-  getVolumePriceLabel = () => {
-    const { woodName, totalVolume, totalPrice } = this.state;
 
-    const volumeLabel = woodName ?
-      <span>{woodName}, объём: {totalVolume} м<sup>3</sup></span> :
-      <span>объём: {totalVolume} м<sup>3</sup></span>;
+  checkDimensionsCompletion = () => {
+    const { thickness, width, length } = this.state;
+    return !!(thickness && width && length);
+  }
 
-    const priceLabel = <span>цена: {totalPrice}</span>;
+  transformToCubicMeters = () => {
+    const { thickness, width, length, units, } = this.state;
+    let unitsDivider = 1;
+    
+    if (units === 'mm') unitsDivider = 1000000000;
+    else if (units === 'cm') unitsDivider = 100;
+    
+    const volumeInMeters = ([thickness, width, length]
+      .reduce((acc, current) => current * acc )) / unitsDivider;
+    return volumeInMeters;
+  };
 
-    return (
-      <div>
-        <div>{volumeLabel}</div>
-        <div>{priceLabel}</div>
-      </div>
-      );
-    };
+  
+  getTotalPrice = () => {
+    const { priceForCubicMeter, totalVolume } = this.state;
+    return priceForCubicMeter * totalVolume;
+  }
 
+
+  
   render() {
     const { woodName, units, totalVolume, totalPrice } = this.state;
     const { id, numberOfBoards, onDelete, onAdd } = this.props;
     const onCalculate = this.onCalculate;
 
+    
     return (
       <form className='board-form' action='/' method='post'>
 
         <div className='board-form__section'>
-          { createWoodTypesInput(id) }
+          <WoodNameInput id={id} />
         </div>
 
         <div className='board-form__section'>
-          { createPriceInput(id, this.onPriceChange) }
+          <PriceInput  id={id} onPriceChange={this.onPriceChange}/>
         </div>
 
         <div className='board-form__section'>
-          { createUnitsInput(id) }
+          <UnitsInput id={id} />
         </div>
 
         {createSizeComponents(units, id)}
 
         <div className='board-form__section'>
-          {createFormButtons({id, numberOfBoards, onDelete, onAdd, onCalculate})}
+          <FormButtons 
+            numberOfBoards={numberOfBoards} 
+            id={id} 
+            onCalculate={onCalculate} 
+            onAdd={onAdd} 
+            onDelete={onDelete} 
+          />
         </div>
 
         <div className='board-form__section'>
-          {this.getVolumePriceLabel()}
+          <VolumeAndPriceInfo 
+            woodName={woodName} 
+            totalVolume={totalVolume} 
+            totalPrice={totalPrice}/>
         </div>
         
       </form>
       
     );
   };
+};
 
-}
 
+// ниже расположены компоненты для формы
+const WoodNameInput = (props) => {
+  const { id } = props;
 
-const createWoodTypesInput = (id) => {
-  const woodTypes = [
+  const suggestOptions = [
     'сипо', 'орех', 'амарант', 'абачи', 'бубинга', 'ольха', 'макоре', 
     'клён', 'акация', 'анегри', 'кедр', 'бальза', 'бук', 'падук', 'венге', 
     'палисандр', 'вишня', 'граб', 'дуб', 'тополь', 'ясень', 'липа', 'махагон',
     'меранти', 'мербау', 'цедер', 'эбен'];
-  const optionElements = woodTypes.map((el, i) => <option value={el} key={i}/>);
+
+  const optionElements = suggestOptions
+    .map((el, i) => <option value={el} key={i}/>);
   
   return (
     <div className='board-form__group'>
-      
-      {/* <label htmlFor={`wood-type-${id}`}>
-        Порода дерева
-      </label> */}
-      
+
       <input
         type='text'
         id={`wood-type-${id}`}
@@ -132,15 +127,70 @@ const createWoodTypesInput = (id) => {
         placeholder='порода дерева'
       />
         
-      <datalist 
-        id='wood-list'
-      >
-        { optionElements }
-      </datalist>
+      <datalist id='wood-list'> { optionElements } </datalist>
     </div>
-
   );
 };
+
+
+const PriceInput = (props) => {
+  const { id, onPriceChange } = props;
+  return (
+    <div className='board-form__group'>
+
+      <label 
+        htmlFor={`price-${id}`}
+        >Цена за кубический метр
+      </label>
+
+      <input
+        type='number'
+        id={`price-${id}`}
+        onChange={onPriceChange}
+        placeholder='0'
+        required
+      />
+    </div>
+  );
+};
+
+
+
+
+
+
+const SizeInputs = (props) => {
+  const { formId } = props;
+
+  const inputFields = [
+    { labelText: 'thickness', onChange: () => {}, },
+    { labelText: 'width',     onChange: () => {}, },
+    { labelText: 'length',    onChange: () => {}, }
+  ];
+
+  const SizeInput = (props) => {
+    const {labelText, onChange, key} = props;
+
+    return (
+      <div className='board-form__section' key={key}>
+        
+      </div>
+    )
+    
+  }
+
+  const sizeInputs = ['thickness', 'width', 'length']
+    .map((el) => {
+      return (
+        <div className='board-form__section' key={el}>
+          {/* { createSizeInput(el, units, id) } */}
+        </div>
+      );
+    });
+
+  return sizeInputs
+};
+
 
 
 function createSizeInput(dimension, units, id) {
@@ -192,7 +242,10 @@ function createSizeComponents(units, id) {
 }
 
 
-const createUnitsInput = (id) => {
+
+
+const UnitsInput = (props) => {
+  const { id } = props;
   return (
     <div className='board-form__group'>
       <label htmlFor={`units-select-${id}`}>В чём будешь измерять?</label>
@@ -206,35 +259,12 @@ const createUnitsInput = (id) => {
 }
 
 
-function createPriceInput(id, onPriceChange) {
-  return (
-    <div className='board-form__group'>
-
-      <label 
-        htmlFor={`price-${id}`}
-        >Цена за кубический метр
-      </label>
-
-      <input
-        type='number'
-        id={`price-${id}`}
-        onChange={onPriceChange}
-        // onBlur={onPriceChange}
-        placeholder='0'
-        required
-      />
-    </div>
-  );
-}
-
-
-function createFormButtons ({numberOfBoards, onDelete, onAdd, onCalculate, id}) {
-  
-  let buttonSize = numberOfBoards === 1 ? 'big' : 'small';
-
+const FormButtons = (props) => {
+  const { numberOfBoards, id, onCalculate, onAdd, onDelete } = props;
+    
   const calculateBtn = (
     <button 
-      className='btn-calculate' 
+      className='btn--grow'
       type='button'
       onClick={onCalculate}
       >посчитать по-братски
@@ -243,7 +273,7 @@ function createFormButtons ({numberOfBoards, onDelete, onAdd, onCalculate, id}) 
 
   const clearBtn = (
     <button 
-      className={buttonSize} 
+      className='btn--grow'
       type='reset'
       >очистить
     </button>
@@ -251,33 +281,51 @@ function createFormButtons ({numberOfBoards, onDelete, onAdd, onCalculate, id}) 
 
   const addFormBtn = (
     <button 
-      className={buttonSize} 
-      type='button'
+      className='btn--grow' 
+      type='button' 
       onClick={() => onAdd(id)}
       >добавить
-  </button>
-  )
+    </button>
+  );
 
-  let deleteBtn = (
+  const deleteBtn = (
     <button 
-      className={buttonSize}
-      type='button'
+      className='btn--grow' 
+      type='button' 
       onClick={() => onDelete(id)}
       >удалить
     </button>
   );
 
-  if (numberOfBoards === 1) {
-    deleteBtn = null;
-  }
+  return (
+    <div>
+      <div className='form-buttons__row'>
+        {addFormBtn}
+        {clearBtn}
+        {numberOfBoards > 1 ? deleteBtn : null }
+      </div>
+      <div className='form-buttons__row'>
+        {calculateBtn}
+      </div> 
+    </div>
+  );
+};
+
+
+
+const VolumeAndPriceInfo = (props) => {
+  const { woodName, totalVolume, totalPrice } = props;
+
+  const volumeLabel = woodName ?
+    <span>{woodName}, объём: {totalVolume} м<sup>3</sup></span> :
+    <span>объём: {totalVolume} м<sup>3</sup></span>;
+
+  const priceLabel = <span>цена: {totalPrice}</span>;
 
   return (
-    <div className='board-form__buttons'>
-      {addFormBtn}
-      {clearBtn}
-      {deleteBtn}
-
-      {calculateBtn}
+    <div>
+      <div>{volumeLabel}</div>
+      <div>{priceLabel}</div>
     </div>
   );
 };

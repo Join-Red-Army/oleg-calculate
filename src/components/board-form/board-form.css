@@ -1,5 +1,6 @@
 .board-form {
-  width: min-content;
+  /* width: min-content; */
+  width: 270px;
   margin: 15px;
   padding: 20px;
   border: 1px solid rgb(180, 180, 180);
@@ -29,6 +30,8 @@
   display: flex;
   flex-direction: column;
 
+  width: 100%;
+
   border: none;
   border-bottom: 1px solid #dadada;
 
@@ -53,6 +56,17 @@
 }
 
 
+.form-buttons__row {
+  display: flex;
+  gap: 5px;
+
+}
+
+.btn--grow {
+  flex: 1 1 0;
+}
+
+
 .big {
   width: 49%;
 }
@@ -60,6 +74,6 @@
   width: 33%;
 }
 
-.btn-calculate {
+/* .btn-calculate {
   width: 100%;
-}
+} */
