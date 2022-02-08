@@ -78,7 +78,9 @@ export default class BoardForm extends Component {
           <UnitsInput id={id} />
         </div>
 
-        {createSizeComponents(units, id)}
+        <div className='board-form__section'>
+          <SizeInputs formId={id} units={units}/>
+        </div>
 
         <div className='board-form__section'>
           <FormButtons 
@@ -160,87 +162,40 @@ const PriceInput = (props) => {
 
 
 const SizeInputs = (props) => {
-  const { formId } = props;
+  const { formId, units } = props;
 
-  const inputFields = [
-    { labelText: 'thickness', onChange: () => {}, },
-    { labelText: 'width',     onChange: () => {}, },
-    { labelText: 'length',    onChange: () => {}, }
+
+  const inputData = [
+    { dimension: 'thickness', units, labelText: 'толщина', formId: formId, onChange: () => {}, },
+    { dimension: 'width',     units, labelText: 'ширина',  formId: formId, onChange: () => {}, },
+    { dimension: 'length',    units, labelText: 'ширина',  formId: formId, onChange: () => {}, }
   ];
 
+
   const SizeInput = (props) => {
-    const {labelText, onChange, key} = props;
+    const {labelText, dimension, units, formId, onChange} = props;
 
     return (
-      <div className='board-form__section' key={key}>
-        
+      <div className='board-form__group'>
+        <label htmlFor={ `${dimension}-${formId}` }
+          >{`${labelText}, ${units}`}
+        </label>
+  
+        <input 
+          type='number'
+          id={`${dimension}-${formId}`}
+          placeholder='0'
+          required
+        />
       </div>
-    )
-    
-  }
-
-  const sizeInputs = ['thickness', 'width', 'length']
-    .map((el) => {
-      return (
-        <div className='board-form__section' key={el}>
-          {/* { createSizeInput(el, units, id) } */}
-        </div>
-      );
-    });
-
-  return sizeInputs
-};
-
-
-
-function createSizeInput(dimension, units, id) {
-
-  let labelName = null;
-  switch (dimension) {
-    case 'thickness': 
-      labelName = 'толщина';
-      break;
-    case 'width':
-      labelName = 'ширина';
-      break;
-    case 'length': 
-      labelName = 'длина';
-      break;
-    default: 
-      return null;
+    );
   };
 
-  return (
-    <div className='board-form__group'>
+  const inputElements = inputData
+    .map((data, i) => <SizeInput {...data} key={i} />);
 
-      <label htmlFor={ `${dimension}-${id}` }>
-        {`${labelName}, ${units}`}
-      </label>
-
-      <input 
-        type='number'
-        id={`${dimension}-${id}`}
-        placeholder='0'
-        required
-      />
-    </div>
-  );
+  return <div>{inputElements}</div>;
 };
-
-
-function createSizeComponents(units, id) {
-  const sizeInputs = ['thickness', 'width', 'length']
-    .map((el) => {
-      return (
-        <div className='board-form__section' key={el}>
-          { createSizeInput(el, units, id) }
-        </div>
-      );
-    });
-
-  return sizeInputs
-}
-
 
 
 
